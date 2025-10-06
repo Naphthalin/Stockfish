@@ -58,13 +58,13 @@ Value Eval::evaluate(const Eval::NNUE::Networks&    networks,
 
     assert(!pos.checkers());
 
-    bool smallNet           = use_smallnet(pos);
+    bool smallNet           = true; // use_smallnet(pos);
     auto [psqt, positional] = smallNet ? networks.small.evaluate(pos, accumulators, &caches.small)
                                        : networks.big.evaluate(pos, accumulators, &caches.big);
 
     Value nnue = (125 * psqt + 131 * positional) / 128;
 
-    // Re-evaluate the position when higher eval accuracy is worth the time spent
+/*    // Re-evaluate the position when higher eval accuracy is worth the time spent
     if (smallNet && (std::abs(nnue) < 236))
     {
         std::tie(psqt, positional) = networks.big.evaluate(pos, accumulators, &caches.big);
@@ -82,7 +82,8 @@ Value Eval::evaluate(const Eval::NNUE::Networks&    networks,
 
     // Damp down the evaluation linearly when shuffling
     v -= v * pos.rule50_count() / 212;
-
+*/
+    int v = nnue;
     // Guarantee evaluation does not hit the tablebase range
     v = std::clamp(v, VALUE_TB_LOSS_IN_MAX_PLY + 1, VALUE_TB_WIN_IN_MAX_PLY - 1);
 
